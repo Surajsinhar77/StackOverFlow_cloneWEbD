@@ -30,7 +30,7 @@ const login = async(req, res)=>{
     try{
         const userData = await userModel.findOne({email:email});
         if(!userData){
-            res.json({message: "User Doesn't Exist", userExist: false});
+            res.send({message: "User Doesn't Exist", userExist: false});
         }else{
             const isValid = bcrypt.compareSync(password, userData.password);
             res.status((isValid)? 200 : 401).send({
@@ -38,7 +38,9 @@ const login = async(req, res)=>{
                 userExist : (isValid)? true : false,
             })
         }
+        console.log("You Hit the Url correct")
     }catch(err){
+        console.log("You Hit the Url correct but ans is False")
         res.send({message: err.message, Error: err});
     }
 }
