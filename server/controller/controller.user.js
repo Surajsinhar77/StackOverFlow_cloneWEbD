@@ -5,28 +5,33 @@ const register = async (req, res)=>{
     const {display_name, email, password } = req.body;
     const userData = await userModel.findOne({email: email});
     if(userData){
-        res.status(409).json({message: "Email Already exist ", emailExist: true});
+        return res.status(409).send({message: "Email Already exist ", emailExist: true});
     }
-    const data = new userModel({
-        display_name : display_name,
-        email : email , 
-        password : bcrypt.hashSync(password, 10)
-    });
-
-    data.save().then((data)=>{
-        console.log(data);
-        res.send({message: "User is Registerd", data, userExist: true});
-    })
-    .catch((err)=>{
-        console.error(err);
-        res.status(402).send({message: err.message ,err, userExist: false});
-    })
+    try{
+        const data = new userModel({
+            display_name : display_name,
+            email : email , 
+            password : bcrypt.hashSync(password, 10)
+        });
+    
+        data.save().then((data)=>{
+            console.log(data);
+            res.send({message: "User is Registerd", data, userExist: true});
+        })
+        .catch((err)=>{
+            console.error(err);
+            res.status(402).send({message: err.message ,err, userExist: false});
+        })
+    }catch(error){
+        res.status(409).json({message: "Email Already exist ", emailExist: true});
+        console.log(error);
+    }
 }
-
 
 // Login Function
 const login = async(req, res)=>{
     const{email, password} = req.body;
+    console.log(req.body);
     try{
         const userData = await userModel.findOne({email:email});
         if(!userData){
@@ -38,7 +43,6 @@ const login = async(req, res)=>{
                 userExist : (isValid)? true : false,
             })
         }
-        console.log("You Hit the Url correct")
     }catch(err){
         console.log("You Hit the Url correct but ans is False")
         res.send({message: err.message, Error: err});
