@@ -1,8 +1,0 @@
-{
-  "dependencies": {
-    "mdb-react-ui-kit": "^6.1.0"
-  },
-  "devDependencies": {
-    "tailwindcss": "^3.3.2"
-  }
-}
